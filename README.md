@@ -12,4 +12,4 @@ JS version of films-v1 for easy to use UI
 - [ ] Allow for user input of list
 
 ## Future after more learning
-- [] Integrate TMDB API
+- [ ] Integrate TMDB API
