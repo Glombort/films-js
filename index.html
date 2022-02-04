@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href=".\css\styles.css">
+    <title>Films V2</title>
+</head>
+<body>
+    <header>
+        <h1>Film Picker</h1>
+        <p>A site to select requirements for a film, to get a random selection meeting this criteria.</p>
+    </header>
+    <main>
+        <section class="intro">
+            <header><h2>Intro</h2></header>
+            <ol>
+                Get a film by choosing:
+                <li>Maximum runtime</li>
+                <li>Genre</li>
+                <li>Language</li>
+                <li>Decade</li>
+            </ol>
+        </section>
+        
+        <form class="picker" action="#">
+
+            <label for="runtime">Maximum runtime in minutes (0 for any length)</label>
+            <input id="runtime" type="number" name="runtime" />
+
+            <label for="genre">Select Genre</label>
+            <select id="genre" name="genre">
+                <option value="any-genre">Any Genre</option>
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="crime">Crime</option>
+                <option value="drama">Drama</option>
+                <option value="thriller">Thriller</option>
+                <option value="horror">Horror</option>
+                <option value="western">Western</option>
+            </select>
+
+            <label for="language">Select Language</label>
+            <select id="language" name="language">
+                <option value="any-lang">Any Language</option>
+                <option value="english">English</option>
+                <option value="french">French</option>
+                <option value="spanish">Spanish</option>
+                <option value="korean">Korean</option>
+                <option value="japanese">Japanese</option>
+            </select>
+
+            <label for="decade">Select Decade</label>
+            <select id="decade" name="decade">
+                <option value="any-decade">Any Decade</option>
+                <option value="1960s">1960s</option>
+                <option value="1970s">1970s</option>
+                <option value="1980s">1980s</option>
+                <option value="1990s">1990s</option>
+                <option value="2000s">2000s</option>
+                <option value="2010s">2010s</option>
+                <option value="2020s">2020s</option>
+            </select>
+
+            <button type="submit">Submit Choices</button>
+        </form>
+
+        <section class="results">
+
+            <article class="film-output" id="film-1">
+                <h2 id="title-1"></h2>
+                <p id="blurb-1"></p>
+            </article>
+
+            <article class="film-output" id="film-2">
+                <h2 id="title-2"></h2>
+                <p id="blurb-2"></p>
+            </article>
+
+            <article class="film-output" id="film-3">
+                <h2 id="title-3"></h2>
+                <p id="blurb-3"></p>
+            </article>
+
+            <article class="film-output" id="film-4">
+                <h2 id="title-4"></h2>
+                <p id="blurb-4"></p>
+            </article>
+
+            <article class="film-output" id="film-5">
+                <h2 id="title-5"></h2>
+                <p id="blurb-5"></p>
+            </article>
+        </section>
+    </main>
+    <footer></footer>
+    <script src=".\scripts\script.js"></script>
+</body>
+
+</html>
