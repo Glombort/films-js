@@ -13,3 +13,4 @@ JS version of films-v1 for easy to use UI
 
 ## Future after more learning
 - [ ] Integrate TMDB API
+- [ ] User Logins
