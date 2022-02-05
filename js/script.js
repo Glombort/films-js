@@ -78,7 +78,7 @@ function chooserFunc() {
                 return false;
             }
         return (runtimeFilter(item['runtime'], userFilm['runtime']) && genreFilter(item['genre'], userFilm['genre']) && languageFilter(item['language'], userFilm['language']) && decadeFilter(item['year'], userFilm['year']));}))
-        .then(films => (document.getElementById('title-1').innerHTML=films[0].name))
+        .then(films => filmOutput(films))
 }
 
 /*
@@ -92,7 +92,6 @@ function runtimeFilter(filmRuntime, userRuntime) {
     }
     return filmRuntime <= (parseInt(userRuntime) + 10);
 }
-
 //Checks a film contains the users selected genre
 function genreFilter(filmGenre, userGenre) {
     if (userGenre === 'any-genre') {
@@ -100,7 +99,6 @@ function genreFilter(filmGenre, userGenre) {
     }
     return filmGenre.includes(userGenre);
 }
-
 //Selects language
 function languageFilter(filmLanguage, userLanguage) {
     if (userLanguage === 'any-lang') {
@@ -108,7 +106,6 @@ function languageFilter(filmLanguage, userLanguage) {
     }
     return filmLanguage === userLanguage;
 }
-
 //Selects decade
 function decadeFilter(filmYear, userDecade) {
     if (userDecade === 'any-decade') {
@@ -117,3 +114,18 @@ function decadeFilter(filmYear, userDecade) {
     let decade = Math.floor(filmYear / 10) * 10;
     return decade === parseInt(userDecade);
 }
+
+/*
+Output Area
+*/
+
+function filmOutput(films) {
+    //Random Shuffle of array
+    films = films.sort(() => Math.random() - 0.5)
+    //Pick 5 films
+    for (let i=0; i<=4; i++) {
+        let id = 'title-' + String(i + 1)
+        document.getElementById(id).innerHTML = films[i].name;
+    }
+}
+
