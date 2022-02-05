@@ -7,7 +7,7 @@ JS version of films-v1 for easy to use UI
 
 ## To be added after initialisation
 - [x] Change from csv format
-- [ ] Ran in pages
+- [x] Ran in pages
 - [ ] Work out multi genres
 - [ ] Allow for user input of list
 
