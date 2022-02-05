@@ -1,0 +1,21 @@
+body {
+    margin-bottom:50px;
+}
+
+footer {
+    position: fixed;
+    height: 50px;
+    background-color: red;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin-bottom: 0px;
+    display: flex;
+    margin-left: auto;
+    align-items: center;
+    align-content: center;
+}
+
+img {
+    max-height: 100%;
+}
