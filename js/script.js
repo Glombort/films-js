@@ -78,7 +78,7 @@ function chooserFunc() {
                 return false;
             }
         return (runtimeFilter(item['runtime'], userFilm['runtime']) && genreFilter(item['genre'], userFilm['genre']) && languageFilter(item['language'], userFilm['language']) && decadeFilter(item['year'], userFilm['year']));}))
-        .then(films => filmOutput(films))
+        .then(films => filmsChosen(films))
 }
 
 /*
@@ -119,13 +119,58 @@ function decadeFilter(filmYear, userDecade) {
 Output Area
 */
 
-function filmOutput(films) {
+const APIKEY = "87337df5190b4447f246a4872658a898";
+let baseURL = 'https://api.themoviedb.org/3/';
+let configData = null;
+let baseImageURL = null;
+
+//Configure the api and the urls for later use
+function configTMDB() {
+    let url = "".concat(baseURL, 'configuration?api_key=', APIKEY); 
+    fetch(url)
+    .then((result)=>{
+        return result.json();
+    })
+    .then((data)=>{
+        baseImageURL = data.images.secure_base_url;
+        configData = data.images;
+        console.log('config fetched');
+    })
+    .catch(function(err){
+        alert(err);
+    });
+}
+document.addEventListener('DOMContentLoaded', configTMDB);
+
+//Takes available films, shuffles and picks first 5
+function filmsChosen(films) {
     //Random Shuffle of array
     films = films.sort(() => Math.random() - 0.5)
     //Pick 5 films
     for (let i=0; i<=4; i++) {
-        let id = 'title-' + String(i + 1)
-        document.getElementById(id).innerHTML = films[i].name;
+        console.log(films[i].name)
+        filmSearch(films[i].name, films[i].year, i + 1)
     }
 }
 
+//Search for films based on name, year of release to pick the correct
+function filmSearch(keyword, year, index) {
+    let url = ''.concat(baseURL, 'search/movie?api_key=', APIKEY, '&query=', keyword);
+    fetch(url)
+    .then(result=>result.json())
+    .then((data)=>{
+        let i =0
+        while (data.results[i].release_date.substring(0,4) != year) {
+            i++
+        }
+        filmOutput(data.results[i], index);        
+    })
+}
+
+//Output to the correct part of index.html for the title, overview and image
+function filmOutput(data, index) {
+    let title = `<h2>${data.title}</h2>`;
+    let overview = `<p>${data.overview}</p>`;
+    console.log(data.release_date.substring(0,4))
+    document.getElementById('film-' + String(index)).innerHTML = title + overview;
+}
