@@ -3,6 +3,45 @@ const filmPromise = fetch("./js/films_list.json")
    return response.json();
 })
 
+//Gets options for user to select from
+const selectionPromise = filmPromise.then(response => selectors(response))
+
+/*
+Functions for options in dropdown menus
+*/
+
+//Directing to each individual option selector
+function selectors(filmList) {
+    let genres = []
+    let languages = []
+    filmList.forEach(element => {
+        genreOptions(element['genre'], genres);    
+        languageOptions(element['language'], languages)
+    });
+    console.log(languages.sort())
+    
+}
+
+//Going through the genres
+function genreOptions(filmGenre, available) {
+    filmGenre.forEach((genre) => {
+        if (!available.includes(genre)) {
+            available.push(genre)
+        }
+    })
+    return available
+}
+
+//Going through the languages
+function languageOptions(filmLanguage, available) {
+    if (!available.includes(filmLanguage)) {
+        available.push(filmLanguage)
+    }
+    
+    return available
+}
+
+// Form submission
 document.getElementById("pick-btn").onclick = function() {chooserFunc()};
 function chooserFunc() {
     //Sets users choice of film
