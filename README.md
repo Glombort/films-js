@@ -13,5 +13,5 @@ JS version of films-v1 for easy to use UI
 - [ ] Create nice UI
 
 ## Future after more learning
-- [ ] Integrate [TMDB API](https://developers.themoviedb.org/3/getting-started/introduction)
+- [x] Integrate [TMDB API](https://developers.themoviedb.org/3/getting-started/introduction)
 - [ ] User Logins
