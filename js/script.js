@@ -14,9 +14,11 @@ Functions for options in dropdown menus
 function selectors(filmList) {
     let genres = []
     let languages = []
+    let decades = []
     filmList.forEach(element => {
         genreOptions(element['genre'], genres);    
         languageOptions(element['language'], languages)
+        decadeOptions(element['year'], decades)
     });
     //Adding available genres to html
     for (let genre in genres) {
@@ -25,6 +27,10 @@ function selectors(filmList) {
     //Adding available languages to html
     for (let language in languages) {
         document.getElementById('language').innerHTML += `<option value="${languages[language]}">${languages[language][0].toUpperCase() + languages[language].substring(1)}</option>`
+    }
+    //Adding available decades to html
+    for (let decade in decades) {
+        document.getElementById('decade').innerHTML += `<option value="${decades[decade]}">${String(decades[decade]) + 's'}</option>`
     }
 }
 
@@ -43,7 +49,15 @@ function languageOptions(filmLanguage, available) {
     if (!available.includes(filmLanguage)) {
         available.push(filmLanguage)
     }
-    
+    return available.sort()
+}
+
+//Going through years for decades
+function decadeOptions(filmYear, available) {
+    let decade = Math.floor(filmYear/10) * 10;
+    if (!available.includes(decade)) {
+        available.push(decade)
+    }
     return available.sort()
 }
 
@@ -96,10 +110,10 @@ function languageFilter(filmLanguage, userLanguage) {
 }
 
 //Selects decade
-function decadeFilter(filmDecade, userDecade) {
+function decadeFilter(filmYear, userDecade) {
     if (userDecade === 'any-decade') {
         return true
     }
-    let decade = Math.floor(filmDecade/10) * 10;
+    let decade = Math.floor(filmYear / 10) * 10;
     return decade === parseInt(userDecade);
 }
