@@ -18,8 +18,14 @@ function selectors(filmList) {
         genreOptions(element['genre'], genres);    
         languageOptions(element['language'], languages)
     });
-    console.log(languages.sort())
-    
+    //Adding available genres to html
+    for (let genre in genres) {
+        document.getElementById('genre').innerHTML += `<option value="${genres[genre]}">${genres[genre][0].toUpperCase() + genres[genre].substring(1)}</option>`
+    }
+    //Adding available languages to html
+    for (let language in languages) {
+        document.getElementById('language').innerHTML += `<option value="${languages[language]}">${languages[language][0].toUpperCase() + languages[language].substring(1)}</option>`
+    }
 }
 
 //Going through the genres
@@ -29,7 +35,7 @@ function genreOptions(filmGenre, available) {
             available.push(genre)
         }
     })
-    return available
+    return available.sort()
 }
 
 //Going through the languages
@@ -38,14 +44,14 @@ function languageOptions(filmLanguage, available) {
         available.push(filmLanguage)
     }
     
-    return available
+    return available.sort()
 }
 
 // Form submission
 document.getElementById("pick-btn").onclick = function() {chooserFunc()};
 function chooserFunc() {
     //Sets users choice of film
-    var userFilm = {
+    let userFilm = {
         "genre": document.getElementById('genre').value,
         "language": document.getElementById('language').value,
         "runtime": document.getElementById('runtime').value,
