@@ -10,6 +10,7 @@ JS version of films-v1 for easy to use UI
 - [x] Ran in pages
 - [ ] Work out multi genres
 - [ ] Allow for user input of list
+- [ ] Create nice UI
 
 ## Future after more learning
 - [ ] Integrate [TMDB API](https://developers.themoviedb.org/3/getting-started/introduction)
