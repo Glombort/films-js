@@ -13,7 +13,7 @@
         <p>A site to select requirements for a film, to get a random selection meeting this criteria.</p>
     </header>
     <main>
-        <section class="intro">
+        <section class="intro center">
             <header><h2>Intro</h2></header>
             <ul>
                 Get a film by choosing:
@@ -44,23 +44,19 @@
                 <option value="any-decade">Any Decade</option>
             </select>
 
-            <button type="submit" id="pick-btn">Submit Choices</button>
+            <button type="submit" class="button" id="pick-btn">Submit Choices</button>
         </form>
 
-        <section class="results">
-
-            <article class="film-output"><div id="film-1"></div><div id="poster-1"></div></article>
-
-            <article class="film-output"><div id="film-2"></div><div id="poster-2"></div></article>
-
-            <article class="film-output"><div id="film-3"></div><div id="poster-3"></div></article>
-
-            <article class="film-output"><div id="film-4"></div><div id="poster-4"></div></article>
-
-            <article class="film-output"><div id="film-5"></div><div id="poster-5"></div></article>
+        <section class="results center grid width-lg">
+            <article class="film-output width-sm flip-card" id="out-1"><div class="flip-inner"><div class="flip-back" id="film-1"></div><div class="flip-front" id="poster-1"></div></div></article>
+            <article class="film-output width-sm flip-card" id="out-2"><div class="flip-inner"><div class="flip-back" id="film-2"></div><div class="flip-front" id="poster-2"></div></div></article>
+            <article class="film-output width-sm flip-card" id="out-3"><div class="flip-inner"><div class="flip-back" id="film-3"></div><div class="flip-front" id="poster-3"></div></div></article>
+            <article class="film-output width-sm flip-card" id="out-4"><div class="flip-inner"><div class="flip-back" id="film-4"></div><div class="flip-front" id="poster-4"></div></div></article>
+            <article class="film-output width-sm flip-card" id="out-5"><div class="flip-inner"><div class="flip-back" id="film-5"></div><div class="flip-front" id="poster-5"></div></div></article>
         </section>
+
     </main>
-    <footer><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg"><p>"This product uses the TMDB API but is not endorsed or certified by TMDB."</p></footer>
+    <footer class=""><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB Logo for attribution"><p>"This product uses the <a href="https://developers.themoviedb.org/3/getting-started/introduction">TMDB API</a> but is not endorsed or certified by <a href="https://www.themoviedb.org/">TMDB</a>."</p></footer>
     <script src=".\js\script.js"></script>
 </body>
 

@@ -170,10 +170,11 @@ function filmSearch(keyword, year, index) {
 //Output to the correct part of index.html for the title, overview and image
 function filmOutput(data, index) {
     console.log(data)
-    let title = `<h2>${data.title}</h2>`;
-    let overview = `<p>${data.overview}</p>`;
-    let poster = `<img src="${baseImageURL}w154${data.poster_path}" alt="Poster for ${data.title}">`;
+    let title = `<h2 class="film-name">${data.title}</h2>`;
+    let overview = `<p class="film-overview">${data.overview}</p>`;
+    let poster = `<img src="${baseImageURL}w500${data.poster_path}" alt="Poster for ${data.title}" class="poster">`;
     console.log(data.release_date.substring(0,4))
     document.getElementById('film-' + String(index)).innerHTML = title + overview;
     document.getElementById('poster-' + String(index)).innerHTML = poster;
+    document.getElementById('out-' + String(index)).tabIndex = 0
 }
