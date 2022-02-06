@@ -1,5 +1,5 @@
 # [films-v2](https://glombort.github.io/films-v2/)
-JS version of films-v1 for easy to use UI
+JS version of [films-v1](https://github.com/Glombort/films-v1) for easy to use UI
 
 ## What's the same
 - Keep the same choices (start with single genre choice)
