@@ -1,25 +1,189 @@
-body {
-    margin-bottom:50px;
+/* The layout primitives for you to use */
+
+.center {
+    max-width: 40rem;
+    margin-left: auto;
+    margin-right: auto;
 }
+
+.width-sm {
+    max-width: 20rem;
+}
+
+.width-lg {
+    max-width: 60rem;
+}
+
+.stack-sm > * + * {
+    margin-top: 0.5rem;
+}
+
+.stack-md > * + * {
+    margin-top: 1rem;
+}
+
+.stack-lg > * + * {
+    margin-top: 2rem;
+}
+
+.stack-xl > * + * {
+    margin-top: 4rem;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.gap-lg {
+    gap: 2rem;
+}
+
+.gap-xl {
+    gap: 4rem;
+}
+
+.justify-space-between {
+    justify-content: space-between;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+}
+
+.column-lg {
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+
+
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+  
+body {
+    font-family: system-ui, sans-serif;
+    background-color: #219EBC;
+    color: #022d42
+}
+  
+a {
+    text-decoration: none;
+    color: inherit;
+}
+  
+ul {
+    list-style: none;
+    padding: 0;
+}
+  
+img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+input {
+    min-width: 24ch;
+    padding: 0.25rem;
+    font: inherit;
+    font-size: 0.875rem;
+    text-align: center;
+    border: 1px solid hsl(200, 10%, 80%);
+    background-color: hsl(200, 10%, 98%);
+  }
+  
+  .button {
+    display: inline-block;
+    border-radius: 4px;
+    border: 0;
+    padding: 0.25rem 1.25rem;
+    font: inherit;
+    background-color: #8ECAE6;
+    color: #023047;
+  }
+  
+  main {
+    padding: 4rem 1.5rem;
+  }
+
+.results {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+
+.flip-card {
+    display: flex;
+    height: 20rem;
+    width:10rem;
+    perspective: 1000px; /* Remove this if you don't want the 3D effect */
+  }
+  
+  /* This container is needed to position the front and back side */
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 1s;
+    transform-style: preserve-3d;
+    
+  }
+
+  /* Position the front and back side */
+  .flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden; /* Safari */
+    backface-visibility: hidden;
+  }
+  
+  /* Style the back side */
+  .flip-back {
+    background-color: #FFB703;
+    transform: rotateY(180deg);
+  }
+
+  /* Do an horizontal flip when you move the mouse over the flip box container */
+  .flip-card:hover .flip-inner, .flip-card:focus .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 footer {
     position: fixed;
-    height: 50px;
-    background-color: red;
+    height: 1.2rem;
+    font-size: 0.7rem;
+    background-color: #90cea1;
     bottom: 0px;
-    left: 0px;
-    right: 0px;
-    margin-bottom: 0px;
     display: flex;
-    margin-left: auto;
-    align-items: center;
-    align-content: center;
+    margin-bottom: 0px;
 }
+
 
 img {
     max-height: 100%;
-}
-
-.film-output {
-    display: flex;
 }
