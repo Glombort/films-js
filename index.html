@@ -48,12 +48,40 @@
         </form>
 
         <section class="results center grid width-lg">
-            <article class="film-output width-sm flip-card" id="out-1"><div class="flip-inner"><div class="flip-back" id="film-1"></div><div class="flip-front" id="poster-1"></div></div></article>
-            <article class="film-output width-sm flip-card" id="out-2"><div class="flip-inner"><div class="flip-back" id="film-2"></div><div class="flip-front" id="poster-2"></div></div></article>
-            <article class="film-output width-sm flip-card" id="out-3"><div class="flip-inner"><div class="flip-back" id="film-3"></div><div class="flip-front" id="poster-3"></div></div></article>
-            <article class="film-output width-sm flip-card" id="out-4"><div class="flip-inner"><div class="flip-back" id="film-4"></div><div class="flip-front" id="poster-4"></div></div></article>
-            <article class="film-output width-sm flip-card" id="out-5"><div class="flip-inner"><div class="flip-back" id="film-5"></div><div class="flip-front" id="poster-5"></div></div></article>
+            <article class="film-output" id="out-1"><button class="filmBtn" id="filmBtn-1"></button></article>
+            <article class="film-output" id="out-2"><button class="filmBtn" id="filmBtn-2"></button></article>
+            <article class="film-output" id="out-3"><button class="filmBtn" id="filmBtn-3"></button></article>
+            <article class="film-output" id="out-4"><button class="filmBtn" id="filmBtn-4"></button></article>
+            <article class="film-output" id="out-5"><button class="filmBtn" id="filmBtn-5"></button></article>
         </section>
+
+        <div id="overlay" class="overlay">
+            <div class="film-overlay center width-lg" id="film-1"><span class="close" id="close-1">&times;</span>
+                <section class="film" id="left-film-1"></section>
+                <section id="right-film-1"></section>
+            </div>
+            
+            <div class="film-overlay center width-lg" id="film-2"><span class="close" id="close-2">&times;</span>
+                <section class="film" id="left-film-2"></section>
+                <section id="right-film-2"></section>
+            </div>
+            
+            <div class="film-overlay center width-lg" id="film-3"><span class="close" id="close-3">&times;</span>
+                <section class="film" id="left-film-3"></section>
+                <section id="right-film-3"></section>
+            </div>
+            
+            <div class="film-overlay center width-lg" id="film-4"><span class="close" id="close-4">&times;</span>
+                <section class="film" id="left-film-4"></section>
+                <section id="right-film-4"></section>
+            </div>
+            
+            <div class="film-overlay center width-lg" id="film-5"><span class="close" id="close-5">&times;</span>
+                <section class="film" id="left-film-5"></section>
+                <section id="right-film-5"></section>
+            </div>
+        </div>
+
 
     </main>
     <footer class=""><img src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_square_1-5bdc75aaebeb75dc7ae79426ddd9be3b2be1e342510f8202baf6bffa71d7f5c4.svg" alt="TMDB Logo for attribution"><p>"This product uses the <a href="https://developers.themoviedb.org/3/getting-started/introduction">TMDB API</a> but is not endorsed or certified by <a href="https://www.themoviedb.org/">TMDB</a>."</p></footer>
