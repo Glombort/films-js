@@ -197,6 +197,7 @@ function filmSearch(film, index) {
 
 //Output to the correct part of index.html for the title, overview and image
 function filmOutput(data, index, film) {
+    console.log(data)
     const leftFilm = document.createElement("section")
     leftFilm.className = "left-film"
     
@@ -204,7 +205,7 @@ function filmOutput(data, index, film) {
     rightFilm.className = "left-film"
 
     const heading = document.createElement("h2");
-    heading.textContent = film.name;
+    heading.textContent = data.title;
     heading.className = "film-name"
 
     const overview = document.createElement("p")
