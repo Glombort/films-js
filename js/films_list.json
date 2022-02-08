@@ -86,7 +86,7 @@
    "genre": ["comedy", "drama"],
    "language": "english",
    "runtime": 98,
-   "year": 2016,
+   "year": 2017,
    "director": "Susan Johnson"
  },
  {
@@ -185,7 +185,7 @@
    "genre": ["comedy", "drama"],
    "language": "english",
    "runtime": 118,
-   "year": 2019,
+   "year": 2020,
    "director": "Shannon Murphy"
  },
  {
@@ -293,7 +293,7 @@
    "genre": ["sci-fi", "thriller", "independent"],
    "language": "english",
    "runtime": 105,
-   "year": 2018,
+   "year": 2019,
    "director": "Zach Lipovsky, Adam B. Stein"
  },
  {
@@ -491,7 +491,7 @@
    "genre": ["crime", "action"],
    "language": "english",
    "runtime": 90,
-   "year": 2016,
+   "year": 2017,
    "director": "Ben Wheatley"
  },
  {
@@ -509,7 +509,7 @@
    "genre": ["comedy", "drama"],
    "language": "english",
    "runtime": 97,
-   "year": 2014,
+   "year": 2015,
    "director": "Noah Baumbach"
  },
  {
@@ -576,7 +576,7 @@
    "director": "Regina King"
  },
  {
-   "name": "Rams-Hrutar",
+   "name": "Hrutar",
    "platform": "Kanopy",
    "genre": ["drama"],
    "language": "icelandic",
@@ -599,7 +599,7 @@
    "genre": ["comedy", "drama"],
    "language": "english",
    "runtime": 93,
-   "year": 2017,
+   "year": 2018,
    "director": "Ben Lewin"
  },
  {
@@ -684,7 +684,7 @@
    "director": "Tom Ford"
  },
  {
-   "name": "ring- ringu",
+   "name": "ringu",
    "platform": "Kanopy",
    "genre": ["horror", "thriller"],
    "language": "japanese",
@@ -707,7 +707,7 @@
    "genre": ["drama", "thriller", "independent"],
    "language": "english",
    "runtime": 112,
-   "year": 2013,
+   "year": 2014,
    "director": "Kelly Reichardt"
  },
  {

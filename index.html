@@ -24,7 +24,7 @@
             </ul>
         </section>
         
-        <form class="picker" action="#" onsubmit="return false">
+        <form class="picker">
 
             <label for="runtime">Maximum runtime in minutes (0 for any length)</label>
             <input id="runtime" type="number" name="runtime" />
@@ -40,7 +40,7 @@
             </select>
 
             <label for="decade">Select Decade</label>
-            <select id="decade" name="decade">
+            <select id="decade" name="year">
                 <option value="any-decade">Any Decade</option>
             </select>
 
@@ -48,38 +48,19 @@
         </form>
 
         <section class="results center grid width-lg">
-            <article class="film-output" id="out-1"><button class="filmBtn" id="filmBtn-1"></button></article>
-            <article class="film-output" id="out-2"><button class="filmBtn" id="filmBtn-2"></button></article>
-            <article class="film-output" id="out-3"><button class="filmBtn" id="filmBtn-3"></button></article>
-            <article class="film-output" id="out-4"><button class="filmBtn" id="filmBtn-4"></button></article>
-            <article class="film-output" id="out-5"><button class="filmBtn" id="filmBtn-5"></button></article>
+            <article class="poster-box"></article>
+            <article class="poster-box"></article>
+            <article class="poster-box"></article>
+            <article class="poster-box"></article>
+            <article class="poster-box"></article>
         </section>
 
-        <div id="overlay" class="overlay">
-            <div class="film-overlay center width-lg" id="film-1"><span class="close" id="close-1">&times;</span>
-                <section class="film" id="left-film-1"></section>
-                <section id="right-film-1"></section>
-            </div>
-            
-            <div class="film-overlay center width-lg" id="film-2"><span class="close" id="close-2">&times;</span>
-                <section class="film" id="left-film-2"></section>
-                <section id="right-film-2"></section>
-            </div>
-            
-            <div class="film-overlay center width-lg" id="film-3"><span class="close" id="close-3">&times;</span>
-                <section class="film" id="left-film-3"></section>
-                <section id="right-film-3"></section>
-            </div>
-            
-            <div class="film-overlay center width-lg" id="film-4"><span class="close" id="close-4">&times;</span>
-                <section class="film" id="left-film-4"></section>
-                <section id="right-film-4"></section>
-            </div>
-            
-            <div class="film-overlay center width-lg" id="film-5"><span class="close" id="close-5">&times;</span>
-                <section class="film" id="left-film-5"></section>
-                <section id="right-film-5"></section>
-            </div>
+        <div class="overlay">
+            <div class="film-overlay center width-lg"><span class="close">&times;</span></div>
+            <div class="film-overlay center width-lg"><span class="close">&times;</span></div>
+            <div class="film-overlay center width-lg"><span class="close">&times;</span></div>
+            <div class="film-overlay center width-lg"><span class="close">&times;</span></div>
+            <div class="film-overlay center width-lg"><span class="close">&times;</span></div>
         </div>
 
 

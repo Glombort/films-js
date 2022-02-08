@@ -111,11 +111,6 @@ main {
     margin-bottom: 1rem;
 }
 
-
-.filmBtn {
-    display: none;
-}
-
 .overlay {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
