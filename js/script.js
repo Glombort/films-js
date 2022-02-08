@@ -1,7 +1,10 @@
+const posterBox = document.querySelectorAll(".poster-box")
+const filmOverlay = document.querySelectorAll('.film-overlay')
+
 const filmPromise = fetch("./js/films_list.json")
 .then(response => {
    return response.json();
-})
+}).catch(console.error)
 
 //Gets options for user to select from
 const selectionPromise = filmPromise.then(response => selectors(response))
@@ -21,16 +24,28 @@ function selectors(filmList) {
         decadeOptions(element['year'], decades)
     });
     //Adding available genres to html
+    const genreDropdown = document.querySelector("#genre")
     for (let genre in genres) {
-        document.getElementById('genre').innerHTML += `<option value="${genres[genre]}">${genres[genre][0].toUpperCase() + genres[genre].substring(1)}</option>`
+        const option = document.createElement("option")
+        option.value = genres[genre]
+        option.textContent = genres[genre][0].toUpperCase() + genres[genre].substring(1)
+        genreDropdown.append(option)
     }
     //Adding available languages to html
+    const langDropdown = document.querySelector("#language");
     for (let language in languages) {
-        document.getElementById('language').innerHTML += `<option value="${languages[language]}">${languages[language][0].toUpperCase() + languages[language].substring(1)}</option>`
+        const option = document.createElement("option")
+        option.value = languages[language]
+        option.textContent = languages[language][0].toUpperCase() + languages[language].substring(1)
+        langDropdown.append(option)
     }
     //Adding available decades to html
+    const decadeDropdown = document.querySelector("#decade")
     for (let decade in decades) {
-        document.getElementById('decade').innerHTML += `<option value="${decades[decade]}">${String(decades[decade]) + 's'}</option>`
+        const option = document.createElement("option")
+        option.value = decades[decade]
+        option.textContent = String(decades[decade]) + 's'
+        decadeDropdown.append(option)
     }
 }
 
@@ -62,23 +77,35 @@ function decadeOptions(filmYear, available) {
 }
 
 // Form submission
-document.getElementById("pick-btn").onclick = function() {chooserFunc(), showBtn()};
-function chooserFunc() {
+const form = document.querySelector("form");
+form.addEventListener("submit", function(event){chooserFunc(event)})
+
+function chooserFunc(event) {
+    event.preventDefault();
+
+    //Reset output areas
+    posterBox.forEach((poster) => poster.innerHTML="")
+    filmOverlay.forEach((inner) => inner.innerHTML="")
+    
+    
     //Sets users choice of film
-    let userFilm = {
-        "genre": document.getElementById('genre').value,
-        "language": document.getElementById('language').value,
-        "runtime": document.getElementById('runtime').value,
-        "year": document.getElementById('decade').value
-        };
+    const formData = new FormData(form);
+    const userFilm = Object.fromEntries(formData)
+
     //Filters films to get list of all to users requirements 
-    let validFilms = filmPromise.then((films) => films.filter(function(item) {
-        for (var key in userFilm) {
-            if (item[key] === undefined)
+    const validFilms = filmPromise.then((films) => films.filter(function(item) {
+        for (let key in userFilm) {
+            if (item[key] === undefined) {
                 return false;
             }
-        return (runtimeFilter(item['runtime'], userFilm['runtime']) && genreFilter(item['genre'], userFilm['genre']) && languageFilter(item['language'], userFilm['language']) && decadeFilter(item['year'], userFilm['year']));}))
+        }
+        const validRun = runtimeFilter(item.runtime, userFilm.runtime)
+        const validGenre = genreFilter(item.genre, userFilm.genre)
+        const validLang = languageFilter(item.language, userFilm.language)
+        const validYear = decadeFilter(item.year, userFilm.year)
+        return (validRun && validGenre && validLang && validYear);}))
         .then(films => filmsChosen(films))
+        .catch(console.error)
 }
 
 /*
@@ -149,7 +176,7 @@ function filmsChosen(films) {
     //Pick 5 films
     for (let i=0; i<=4; i++) {
         console.log(films[i].name)
-        filmSearch(films[i], i + 1,films)
+        filmSearch(films[i], i,films)
     }
 }
 
@@ -165,75 +192,74 @@ function filmSearch(film, index) {
         }
         filmOutput(data.results[i], index, film);        
     })
+    .catch(console.error)
 }
 
 //Output to the correct part of index.html for the title, overview and image
 function filmOutput(data, index, film) {
-    console.log(data)
-    let title = `<h2 class="film-name">${data.title}</h2>`;
-    let overview = `<p class="film-overview">${data.overview}</p>`;
-    let director = `<h3>Director - ${film.director}</h3>`
-    let genre = `<h3>Genres - ${film.genre}</h3>`
-    let year = `<h3>Year - ${film.year}</h3>`
+    const leftFilm = document.createElement("section")
+    leftFilm.className = "left-film"
     
-    let poster = `<img src="${baseImageURL}w500${data.poster_path}" alt="Poster for ${data.title}" class="poster">`;
-    console.log(data.release_date.substring(0,4))
-    document.getElementById('left-film-' + String(index)).innerHTML = title + overview;
-    document.getElementById('right-film-' +String(index)).innerHTML = director + genre + year;
-    document.getElementById('filmBtn-' + String(index)).innerHTML = poster;
-    document.getElementById('out-' + String(index)).tabIndex = 0
+    const rightFilm = document.createElement("section")
+    rightFilm.className = "left-film"
+
+    const heading = document.createElement("h2");
+    heading.textContent = film.name;
+    heading.className = "film-name"
+
+    const overview = document.createElement("p")
+    overview.textContent = data.overview
+    overview.className = "film-overview"
+
+    const director = document.createElement("h3")
+    director.textContent = film.director
+
+    const genre = document.createElement("h3")
+    genre.textContent = film.genre
+
+    const year = document.createElement("h3")
+    year.textContent = film.year
+    
+    const poster = document.createElement("img")
+    poster.src = baseImageURL + "w500" + data.poster_path
+    poster.alt = "Poster for " + data.title
+    poster.className = "poster";
+    
+    leftFilm.append(heading,overview);
+    rightFilm.append(director, genre, year);
+    filmOverlay[index].append(leftFilm, rightFilm)
+    posterBox[index].append(poster);
+    posterBox[index].tabIndex = 0
 }
-
-
-
 
 /*
 Overlay functions
 */
+const overlay = document.querySelector(".overlay");
+const closeBox = document.querySelectorAll(".close")
 
-function showBtn() {
-    document.getElementById("filmBtn-1").style.display = "inherit"
-    document.getElementById("filmBtn-2").style.display = "inherit"
-    document.getElementById("filmBtn-3").style.display = "inherit"
-    document.getElementById("filmBtn-4").style.display = "inherit"
-    document.getElementById("filmBtn-5").style.display = "inherit"
-}
+//Turning posters into buttons to open overlay
+posterBox.forEach((button, index) => {
+    button.addEventListener("click", () => {
+        overlay.style.display = "block"
+        filmOverlay[index].style.display = "flex"
+    });
+  });
 
-
-let overlay = document.getElementById("overlay");
-
-document.getElementById("filmBtn-1").onclick = function() {overlayFunc(1)};
-document.getElementById("filmBtn-2").onclick = function() {overlayFunc(2)};
-document.getElementById("filmBtn-3").onclick = function() {overlayFunc(3)};
-document.getElementById("filmBtn-4").onclick = function() {overlayFunc(4)};
-document.getElementById("filmBtn-5").onclick = function() {overlayFunc(5)};
-
-function overlayFunc(index) {
-    overlay.style.display = "block"
-    document.getElementById("film-" + String(index)).style.display = "flex"
-}
-
-
-document.getElementById("close-1").onclick = function() {closeFunc(1)};
-document.getElementById("close-2").onclick = function() {closeFunc(2)};
-document.getElementById("close-3").onclick = function() {closeFunc(3)};
-document.getElementById("close-4").onclick = function() {closeFunc(4)};
-document.getElementById("close-5").onclick = function() {closeFunc(5)};
-
-// When the user clicks on <span> (x), close the overlay
-function closeFunc(index) {
-    overlay.style.display = "none";
-    document.getElementById("film-" + String(index)).style.display = "none"
-  }
-
+//Setting close for clicking x
+closeBox.forEach((button, index) => {
+    button.addEventListener("click", () => {
+        overlay.style.display = "none"
+        filmOverlay[index].style.display = "none"
+    });
+  });
 
 // When the user clicks anywhere outside of the overlay, close it
 window.onclick = function(event) {
   if (event.target == overlay) {
-    
-    for(let i = 1; i<=5; i++) {
-        document.getElementById("film-" + String(i)).style.display = "none"
-    }
+    filmOverlay.forEach((film) => {
+        film.style.display = "none"
+    })    
     overlay.style.display = "none";
   }
 }
