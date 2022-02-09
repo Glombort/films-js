@@ -39,7 +39,7 @@ userForm.addEventListener("submit", function(event){userList(event)})
 //Create Session ID
 const userSession = document.querySelectorAll("form")[1]
 userSession.addEventListener("submit", function(event){generateSession(event)})
-const sessionID = ["6fdbf6fd5fa3ac27c21b0861ab8ef354ed60328e"]
+const sessionID = []
 const accountID = []
 
 //Gets users watchlist
