@@ -151,7 +151,9 @@ main {
     max-width: 50%;
 }
 
-
+.hide {
+    display: none;
+}
 
 
 
