@@ -39,7 +39,7 @@ userForm.addEventListener("submit", function(event){userList(event)})
 //Create Session ID
 const userSession = document.querySelectorAll("form")[1]
 userSession.addEventListener("submit", function(event){generateSession(event)})
-const sessionID = []
+const sessionID = ["6fdbf6fd5fa3ac27c21b0861ab8ef354ed60328e"]
 const accountID = []
 
 //Gets users watchlist
@@ -59,7 +59,6 @@ function userList(event) {
     event.preventDefault();
     userForm.classList.toggle("hide")
     userSession.classList.toggle("hide")
-    watchlist.classList.tog
     const requestPromise = getRequest().then((json) => {
         request=json
         window.open(`https://www.themoviedb.org/authenticate/${json}`)
@@ -81,7 +80,9 @@ function generateSession(event) {
         body: JSON.stringify(data)
     })
     .then(response => response.json())
-    .then(response => response.session_id)
+    .then(response => {
+        console.log(response)
+        return response.session_id})
     .then(response => {
         sessionID.push(response)
         return sessionID
@@ -113,38 +114,45 @@ function getWatchlist(event) {
     // .then(response => filmOutput(response))
 }
 
-
-// const filmPromise = fetch("./js/films_list.json")
-// .then(response => {
-//    return response.json();
-// }).catch(console.error)
-
-// //Gets options for user to select from
-// const selectionPromise = filmPromise.then(response => selectors(response))
-
-// /*
-// Functions for options in dropdown menus
-// */
-
+/*
+Functions for options in dropdown menus
+*/
+const genreObj = fetch(`${baseURL}genre/movie/list?api_key=${APIKEY}&language=en-US`)
+        .then(response => response.json())
+        .then(response => response['genres'])
+        .then(response => {
+            const genreObj = {}
+            response.forEach((e) => {
+                genreObj[e['id']] = e['name'] 
+            })
+            return genreObj
+        })
+        
 //Directing to each individual option selector
 function selectors(filmList) {
-    let genres = []
+    let genreIds = []
     let languages = []
     let decades = []
     filmList.forEach(element => {
-        //genreOptions(element['genre'], genres);    
+        genreOptions(element['genre_ids'], genreIds);    
         languageOptions(element.original_language, languages)
         let year = element.release_date.substring(0,4)
         decadeOptions(year, decades)
     });
+    const genreNames = genreIdToName(genreIds)
+    
     //Adding available genres to html
-    // const genreDropdown = document.querySelector("#genre")
-    // for (let genre in genres) {
-    //     const option = document.createElement("option")
-    //     option.value = genres[genre]
-    //     option.textContent = genres[genre][0].toUpperCase() + genres[genre].substring(1)
-    //     genreDropdown.append(option)
-//    }
+    const genreDropdown = document.querySelector("#genre")
+    genreNames.then(response => response.sort())
+    .then(response => {
+        for (let genre in response) {
+            const option = document.createElement("option")
+            option.value = response[genre][1]
+            console.log(response[genre])
+            option.textContent = response[genre][0]
+            genreDropdown.append(option)
+        }
+   })
     //Adding available languages to html
     const langDropdown = document.querySelector("#language");
     for (let language in languages) {
@@ -170,8 +178,20 @@ function genreOptions(filmGenre, available) {
             available.push(genre)
         }
     })
-    return available.sort()
+    return available
 }
+
+
+function genreIdToName(ids) {
+    const genreNames = []
+    return genreObj.then(response => {
+        ids.forEach((id) => {
+            genreNames.push([response[id],id])
+        })
+        return genreNames
+    })
+}
+
 
 //Going through the languages
 function languageOptions(filmLanguage, available) {
@@ -190,7 +210,6 @@ function decadeOptions(filmYear, available) {
     return available.sort()
 }
 
-// Form submission
 
 
 function getFilms(event, films) {
@@ -267,31 +286,16 @@ Output Area
 
 
 
-// //Takes available films, shuffles and picks first 5
-// function filmsChosen(films) {
-//     //Random Shuffle of array
-//     films = films.sort(() => Math.random() - 0.5)
-//     //Pick 5 films
-//     for (let i=0; i<=4; i++) {
-//         console.log(films[i].name)
-//         filmSearch(films[i], i,films)
-//     }
-// }
-
-// //Search for films based on name, year of release to pick the correct
-// function filmSearch(film, index) {
-//     let url = ''.concat(baseURL, 'search/movie?api_key=', APIKEY, '&query=', film.name);
-//     fetch(url)
-//     .then(result=>result.json())
-//     .then((data)=>{
-//         let i =0
-//         while (data.results[i].release_date.substring(0,4) != film.year) {
-//             i++
-//         }
-//         filmOutput(data.results[i], index, film);        
-//     })
-//     .catch(console.error)
-// }
+//Takes available films, shuffles and picks first 5
+function filmsChosen(films) {
+    //Random Shuffle of array
+    films = films.sort(() => Math.random() - 0.5)
+    //Pick 5 films
+    for (let i=0; i<=4; i++) {
+        console.log(films[i].name)
+        filmSearch(films[i], i,films)
+    }
+}
 
 //Output to the correct part of index.html for the title, overview and image
 function filmOutput(data) {
@@ -314,7 +318,7 @@ function filmOutput(data) {
 
         // const director = document.createElement("h3")
         // director.textContent = film.director
-
+        
         // const genre = document.createElement("h3")
         // genre.textContent = film.genre
 
