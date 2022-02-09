@@ -10,37 +10,47 @@
 <body>
     <header>
         <h1>Film Picker</h1>
-        <p>A site to select requirements for a film, to get a random selection meeting this criteria.</p>
+        <p>A site to select requirements for a film, to get a random selection from your tmdb watchlist.</p>
     </header>
     <main>
         <section class="intro center">
             <header><h2>Intro</h2></header>
-            <ul>
-                Get a film by choosing:
-                <li>Maximum runtime</li>
-                <li>Genre</li>
-                <li>Language</li>
-                <li>Decade</li>
-            </ul>
+            <p>To start you need a tmdb account and a watchlist created on their platform</p>
         </section>
-        
-        <form class="picker">
+        <form class="auth">
+            <label for="approve">Click to approve your tmdb account</label>
+            <button type="submit" class="button" id="approve">approve</button>
+        </form>
+
+        <form class="session hide">
+            <label for="session">Click to create a user session</label>
+            <button type="submit" class="button" id="session">Watchlist</button>
+        </form>
+
+        <form class="list hide">
+            <label for="getfilms">Click to upload your watchlist</label>
+            <button type="submit" class="button">Use my list</button>
+        </form>
+
+
+
+        <form class="picker hide">
 
             <label for="runtime">Maximum runtime in minutes (0 for any length)</label>
             <input id="runtime" type="number" name="runtime" />
 
-            <label for="genre">Select Genre</label>
+            <!-- <label for="genre">Select Genre</label>
             <select id="genre" name="genre">
                 <option value="any-genre">Any Genre</option>
-            </select>
+            </select> -->
 
             <label for="language">Select Language</label>
-            <select id="language" name="language">
+            <select id="language" name="original_language">
                 <option value="any-lang">Any Language</option>
             </select>
 
             <label for="decade">Select Decade</label>
-            <select id="decade" name="year">
+            <select id="decade" name="release_date">
                 <option value="any-decade">Any Decade</option>
             </select>
 
