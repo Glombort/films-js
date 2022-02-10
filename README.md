@@ -9,7 +9,7 @@ JS version of [films-v1](https://github.com/Glombort/films-v1) for easy to use U
 - [x] Change from csv format
 - [x] Ran in pages
 - [ ] Work out multi genres
-- [ ] Allow for user input of list
+- [x] Allow for user input of list
 - [ ] Create nice UI
 
 ## Future after more learning
