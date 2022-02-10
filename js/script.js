@@ -24,55 +24,52 @@ function configTMDB() {
 }
 document.addEventListener('DOMContentLoaded', configTMDB);
 
-//Get Request A Token
-function getRequest() {
-    return fetch(`${baseURL}authentication/token/new?api_key=${APIKEY}`)
-.then(response => response.json())
-.then(json => json.request_token)
-}
-
+//Setting variables for getting items
+const request = []
+const sessionID = []
+const accountID = []
+const usersList = []
 
 //Get 3rd party approval through TMDB
 const userForm = document.querySelectorAll("form")[0]
-userForm.addEventListener("submit", function(event){userList(event)})
+userForm.addEventListener("submit", function(event){userAuth(event)})
 
 //Create Session ID
 const userSession = document.querySelectorAll("form")[1]
 userSession.addEventListener("submit", function(event){generateSession(event)})
-const sessionID = []
-const accountID = []
 
 //Gets users watchlist
-const usersList = []
 const watchlist = document.querySelectorAll("form")[2]
 watchlist.addEventListener("submit", function(event){getWatchlist(event)})
 
+//Gets films from users list1
+const submitChoices = document.querySelectorAll("form")[3]
+submitChoices.addEventListener("submit", function(event){getFilms(event,usersList)})
 
-
-//Gets users watchlist
-const getfilms = document.querySelectorAll("form")[3]
-getfilms.addEventListener("submit", function(event){getFilms(event,usersList)})
-
-
-let request = ""
-function userList(event) {
+//Authenticates the users tmdb account
+function userAuth(event) {
     event.preventDefault();
     userForm.classList.toggle("hide")
     userSession.classList.toggle("hide")
-    const requestPromise = getRequest().then((json) => {
-        request=json
-        window.open(`https://www.themoviedb.org/authenticate/${json}`)
-    })
+    //Get request token and open autehntication window for user
+    fetch(`${baseURL}authentication/token/new?api_key=${APIKEY}`)
+        .then(response => response.json())
+        .then(json => json.request_token)
+        .then((json) => {
+            request.push(json)
+            window.open(`https://www.themoviedb.org/authenticate/${json}`)
+        })
 }
 
-
-
+//Generates a session id
 function generateSession(event) {
     event.preventDefault();
     userSession.classList.toggle("hide")
     watchlist.classList.toggle("hide")
-    const data = {"request_token": request}
-    const id = fetch(`${baseURL}authentication/session/new?api_key=${APIKEY}`, {
+    
+    const data = {"request_token": request[0]}
+    //Creates sesssion id
+    fetch(`${baseURL}authentication/session/new?api_key=${APIKEY}`, {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -81,7 +78,6 @@ function generateSession(event) {
     })
     .then(response => response.json())
     .then(response => {
-        console.log(response)
         return response.session_id})
     .then(response => {
         sessionID.push(response)
@@ -90,11 +86,14 @@ function generateSession(event) {
 
 }
 
+//Gets users watchlist
 function getWatchlist(event) {
     event.preventDefault();
     watchlist.classList.toggle("hide")
-    getfilms.classList.toggle("hide")
-    const account = fetch(`${baseURL}account?api_key=${APIKEY}&session_id=${sessionID[0]}`)
+    submitChoices.classList.toggle("hide")
+
+    //Gets a users account id
+    fetch(`${baseURL}account?api_key=${APIKEY}&session_id=${sessionID[0]}`)
     .then(response => response.json())
     .then(response => response.id)
     .then(response => {
@@ -102,7 +101,8 @@ function getWatchlist(event) {
         return accountID
     })
 
-    const watchList = fetch(`${baseURL}account/${accountID[0]}/watchlist/movies?api_key=${APIKEY}&language=en-US&session_id=${sessionID[0]}&sort_by=created_at.asc`)
+    //Gets users created watchlist
+    fetch(`${baseURL}account/${accountID[0]}/watchlist/movies?api_key=${APIKEY}&language=en-US&session_id=${sessionID[0]}&sort_by=created_at.asc`)
     .then(response => response.json())
     .then(response => response.results)
     .then(response => {
@@ -110,37 +110,26 @@ function getWatchlist(event) {
         response.forEach((film) => usersList.push(film))
         return usersList
     })
-    
-    // .then(response => filmOutput(response))
 }
 
 /*
 Functions for options in dropdown menus
 */
-const genreObj = fetch(`${baseURL}genre/movie/list?api_key=${APIKEY}&language=en-US`)
-        .then(response => response.json())
-        .then(response => response['genres'])
-        .then(response => {
-            const genreObj = {}
-            response.forEach((e) => {
-                genreObj[e['id']] = e['name'] 
-            })
-            return genreObj
-        })
         
 //Directing to each individual option selector
 function selectors(filmList) {
     let genreIds = []
-    let languages = []
+    let languageIsos = []
     let decades = []
     filmList.forEach(element => {
         genreOptions(element['genre_ids'], genreIds);    
-        languageOptions(element.original_language, languages)
+        languageOptions(element.original_language, languageIsos)
         let year = element.release_date.substring(0,4)
         decadeOptions(year, decades)
     });
+    //Gets names from the ids and isos in the apis output
     const genreNames = genreIdToName(genreIds)
-    
+    const languageNames = langIsoToName(languageIsos)
     //Adding available genres to html
     const genreDropdown = document.querySelector("#genre")
     genreNames.then(response => response.sort())
@@ -148,19 +137,22 @@ function selectors(filmList) {
         for (let genre in response) {
             const option = document.createElement("option")
             option.value = response[genre][1]
-            console.log(response[genre])
             option.textContent = response[genre][0]
             genreDropdown.append(option)
         }
    })
     //Adding available languages to html
     const langDropdown = document.querySelector("#language");
-    for (let language in languages) {
-        const option = document.createElement("option")
-        option.value = languages[language]
-        option.textContent = languages[language][0].toUpperCase() + languages[language].substring(1)
-        langDropdown.append(option)
-    }
+    languageNames.then(response => response.sort())
+    .then(response => {
+        for (let language in response) {
+            const option = document.createElement("option")
+            option.value = response[language][1]
+            option.textContent = response[language][0]
+            langDropdown.append(option)
+        }
+    })
+    
     //Adding available decades to html
     const decadeDropdown = document.querySelector("#decade")
     for (let decade in decades) {
@@ -171,7 +163,8 @@ function selectors(filmList) {
     }
 }
 
-//Going through the genres
+
+//Genre Functions
 function genreOptions(filmGenre, available) {
     filmGenre.forEach((genre) => {
         if (!available.includes(genre)) {
@@ -181,7 +174,18 @@ function genreOptions(filmGenre, available) {
     return available
 }
 
-
+//Genre id to genre name object
+const genreObj = fetch(`${baseURL}genre/movie/list?api_key=${APIKEY}&language=en-US`)
+    .then(response => response.json())
+    .then(response => response['genres'])
+    .then(response => {
+        const genreObj = {}
+        response.forEach((e) => {
+            genreObj[e['id']] = e['name'] 
+        })
+        return genreObj
+    });
+//Turns genre ids from watchlist to [genre_name, genre_id] for name and value of genre dropdown element 
 function genreIdToName(ids) {
     const genreNames = []
     return genreObj.then(response => {
@@ -192,8 +196,7 @@ function genreIdToName(ids) {
     })
 }
 
-
-//Going through the languages
+//Language Functions
 function languageOptions(filmLanguage, available) {
     if (!available.includes(filmLanguage)) {
         available.push(filmLanguage)
@@ -201,7 +204,29 @@ function languageOptions(filmLanguage, available) {
     return available.sort()
 }
 
-//Going through years for decades
+//Creating the langugage id to english name object
+const languageObj = fetch(`${baseURL}configuration/languages?api_key=${APIKEY}`)
+    .then(response => response.json())
+    .then(response => {
+        const languageObj = {}
+        response.forEach((e) => {
+            languageObj[e['iso_639_1']] = e['english_name'] 
+        })
+        return languageObj
+    });
+
+//Turns language isos from watchlist to [language_name, language_iso] for name and value of language dropdown element
+function langIsoToName(isos) {
+    const languageNames = []
+    return languageObj.then(response => {
+        isos.forEach((iso) => {
+            languageNames.push([response[iso],iso])
+        })
+        return languageNames
+    })
+}
+
+//Decade Functions
 function decadeOptions(filmYear, available) {
     let decade = Math.floor(filmYear/10) * 10;
     if (!available.includes(decade)) {
@@ -211,20 +236,19 @@ function decadeOptions(filmYear, available) {
 }
 
 
-
+/*
+Get valid films based on user requirements re initialising the output area for the new films
+*/
 function getFilms(event, films) {
     event.preventDefault();
 
     //Reset output areas
     posterBox.forEach((poster) => poster.innerHTML="")
     filmOverlay.forEach((inner) => inner.innerHTML="")
-    //console.log(films)
     
     //Sets users choice of film
-    const formData = new FormData(getfilms);
+    const formData = new FormData(submitChoices);
     const userFilm = Object.fromEntries(formData)
-    console.log(userFilm)
-    console.log(films)
     //Filters films to get list of all to users requirements 
     const validFilms = films.filter((item) => {
         // for (let key in userFilm) {
@@ -239,10 +263,9 @@ function getFilms(event, films) {
         //const validGenre = genreFilter(item.genre, userFilm.genre)
         const validLang = languageFilter(item.original_language, userFilm['original_language'])
         const validYear = decadeFilter(item.release_date, userFilm['release_date'])
-        return ( validLang);})
-
+        return ( validLang && validYear);});
+    //Go to output functions
     filmOutput(validFilms)
-        
 }
 
 /*
@@ -275,33 +298,22 @@ function decadeFilter(filmYear, userDecade) {
     if (userDecade === 'any-decade') {
         return true
     }
+    filmYear = filmYear.substring(0,4);
     let decadeFilm = Math.floor(filmYear / 10) * 10;
-    let decadeUser = Math.floor(filmYear / 10) * 10;
-    return decadeFilm === parseInt(decadeUser);
+    return decadeFilm === parseInt(userDecade);
 }
 
 /*
 Output Area
 */
 
-
-
-//Takes available films, shuffles and picks first 5
-function filmsChosen(films) {
-    //Random Shuffle of array
+//Output to the correct part of index.html for the title, overview and image
+function filmOutput(films) {
+    //Takes available films, shuffles and picks first 5
     films = films.sort(() => Math.random() - 0.5)
     //Pick 5 films
-    for (let i=0; i<=4; i++) {
-        console.log(films[i].name)
-        filmSearch(films[i], i,films)
-    }
-}
-
-//Output to the correct part of index.html for the title, overview and image
-function filmOutput(data) {
-    console.log(data)
     for(let i=0; i<=4; i++) {
-        let film = data[i]
+        let film = films[i]
         const leftFilm = document.createElement("section")
         leftFilm.className = "left-film"
         
