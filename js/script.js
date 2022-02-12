@@ -1,5 +1,5 @@
-const posterBox = document.querySelectorAll(".poster-box")
-const filmOverlay = document.querySelectorAll('.film-overlay')
+const results = document.querySelector(".results");
+const overlay = document.querySelector(".overlay");
 
 const APIKEY = "87337df5190b4447f246a4872658a898";
 let baseURL = 'https://api.themoviedb.org/3/';
@@ -243,8 +243,8 @@ function getFilms(event, films) {
     event.preventDefault();
 
     //Reset output areas
-    posterBox.forEach((poster) => poster.innerHTML="")
-    filmOverlay.forEach((inner) => inner.innerHTML="")
+    results.innerHTML=""
+    overlay.innerHTML=""
     
     //Sets users choice of film
     const formData = new FormData(submitChoices);
@@ -260,10 +260,10 @@ function getFilms(event, films) {
         // }
         // console.log(userFilm.original_language)
         //const validRun = runtimeFilter(item.runtime, userFilm.runtime)
-        //const validGenre = genreFilter(item.genre, userFilm.genre)
+        const validGenre = genreFilter(item.genre_ids, userFilm.genre_ids)
         const validLang = languageFilter(item.original_language, userFilm['original_language'])
         const validYear = decadeFilter(item.release_date, userFilm['release_date'])
-        return ( validLang && validYear);});
+        return (validGenre && validLang && validYear);});
     //Go to output functions
     filmOutput(validFilms)
 }
@@ -284,7 +284,7 @@ function genreFilter(filmGenre, userGenre) {
     if (userGenre === 'any-genre') {
         return true
     }
-    return filmGenre.includes(userGenre);
+    return filmGenre.includes(parseInt(userGenre));
 }
 //Selects language
 function languageFilter(filmLanguage, userLanguage) {
@@ -313,21 +313,47 @@ function filmOutput(films) {
     films = films.sort(() => Math.random() - 0.5)
     //Pick 5 films
     for(let i=0; i<=4; i++) {
+        //Initialise film being added
         let film = films[i]
-        const leftFilm = document.createElement("section")
+
+        //Create div for posterimage to be added to
+        const posterBox = document.createElement("article")
+        posterBox.className="poster-box"
+        //Add the film poster to image tag
+        const poster = document.createElement("img")
+        poster.src = baseImageURL + "w500" + film.poster_path
+        poster.alt = "Poster for " + film.title
+        poster.className = "poster";
+        //Append the image to the div made for the poster
+        posterBox.append(poster);
+        posterBox.tabIndex = 0
+        //Append to the rest of the posters on the page
+        results.append(posterBox)
+
+        //Setup overlay
+        const filmOverlay = document.createElement("div");
+        filmOverlay.classList.add("film-overlay", "center", "width-lg");
+        //Add the x to close the overlay
+        const span = document.createElement("span");
+        span.className = "close"
+        span.innerHTML = `&times;`
+        //Add the box for left side of the overlay
+        const leftFilm  = document.createElement("section")
         leftFilm.className = "left-film"
-        
+        //Add the box for the right side of the overlay
         const rightFilm = document.createElement("section")
         rightFilm.className = "left-film"
-
+        //Add the title of the film to the left overlay
         const heading = document.createElement("h2");
         heading.textContent = film.title;
         heading.className = "film-name"
-
+        //Add the overview of the film to the left overlay
         const overview = document.createElement("p")
         overview.textContent = film.overview
         overview.className = "film-overview"
-
+/*
+To be added again to right side when found out how to add fetch these from tmdb again
+*/
         // const director = document.createElement("h3")
         // director.textContent = film.director
         
@@ -337,47 +363,46 @@ function filmOutput(films) {
         // const year = document.createElement("h3")
         // year.textContent = film.year
         
-        const poster = document.createElement("img")
-        poster.src = baseImageURL + "w500" + film.poster_path
-        poster.alt = "Poster for " + film.title
-        poster.className = "poster";
-        
+        //Appending the items to the left and right side of the overlay
         leftFilm.append(heading,overview);
         //rightFilm.append(director, genre, year);
-        filmOverlay[i].append(leftFilm, rightFilm)
-        posterBox[i].append(poster);
-        posterBox[i].tabIndex = 0
+        //Appending to the div for the specific overlay
+        filmOverlay.append(span, leftFilm, rightFilm);
+        //Appending to the div for all overlays
+        overlay.append(filmOverlay);
     }
-}
 
-/*
-Overlay functions
-*/
-const overlay = document.querySelector(".overlay");
-const closeBox = document.querySelectorAll(".close")
+    /*
+        Overlay functions
+    */
+    //Getting the divs of the posters and overlays to make interactive
+    const posterBox = document.querySelectorAll('.poster-box')
+    const filmOverlay = document.querySelectorAll('.film-overlay')
+    const closeBox = document.querySelectorAll(".close")
 
-//Turning posters into buttons to open overlay
-posterBox.forEach((button, index) => {
-    button.addEventListener("click", () => {
-        overlay.style.display = "block"
-        filmOverlay[index].style.display = "flex"
+    //Turning posters into buttons to open overlay
+    posterBox.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            overlay.style.display = "block"
+            filmOverlay[index].style.display = "flex"
+        });
     });
-  });
 
-//Setting close for clicking x
-closeBox.forEach((button, index) => {
-    button.addEventListener("click", () => {
-        overlay.style.display = "none"
-        filmOverlay[index].style.display = "none"
+    //Setting close for clicking x
+    closeBox.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            overlay.style.display = "none"
+            filmOverlay[index].style.display = "none"
+        });
     });
-  });
 
-// When the user clicks anywhere outside of the overlay, close it
-window.onclick = function(event) {
-  if (event.target == overlay) {
-    filmOverlay.forEach((film) => {
-        film.style.display = "none"
-    })    
-    overlay.style.display = "none";
-  }
+    // When the user clicks anywhere outside of the overlay, close it
+    window.onclick = function(event) {
+        if (event.target == overlay) {
+        filmOverlay.forEach((film) => {
+            film.style.display = "none"
+        })    
+        overlay.style.display = "none";
+        }
+    }
 }
