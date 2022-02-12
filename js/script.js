@@ -108,6 +108,8 @@ function getWatchlist(event) {
     .then(response => {
         selectors(response)
         response.forEach((film) => usersList.push(film))
+        //Setting max number of films to be selected
+        submitChoices.number_returned.max = usersList.length
         return usersList
     })
 }
@@ -311,8 +313,12 @@ Output Area
 function filmOutput(films) {
     //Takes available films, shuffles and picks first 5
     films = films.sort(() => Math.random() - 0.5)
+    let numberToReturn = parseInt(submitChoices.number_returned.value) - 1
+    if (films.length -1 <= numberToReturn) {
+        numberToReturn = films.length -1
+    }
     //Pick 5 films
-    for(let i=0; i<=4; i++) {
+    for(let i=0; i<=numberToReturn; i++) {
         //Initialise film being added
         let film = films[i]
 
