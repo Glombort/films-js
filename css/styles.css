@@ -155,7 +155,10 @@ main {
     display: none;
 }
 
-
+.picker {
+    display: flex;
+    flex-direction: column;
+}
 
 
 
