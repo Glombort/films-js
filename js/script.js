@@ -29,28 +29,25 @@ const request = []
 const sessionID = []
 const accountID = []
 const usersList = []
-
+const formSections = document.querySelectorAll(".intro")
+const forms = document.querySelectorAll("form")
 //Get 3rd party approval through TMDB
-const userForm = document.querySelectorAll("form")[0]
+const userForm = forms[0]
 userForm.addEventListener("submit", function(event){userAuth(event)})
 
-//Create Session ID
-const userSession = document.querySelectorAll("form")[1]
-userSession.addEventListener("submit", function(event){generateSession(event)})
-
-//Gets users watchlist
-const watchlist = document.querySelectorAll("form")[2]
-watchlist.addEventListener("submit", function(event){getWatchlist(event)})
+//Create Session ID then gets users watchlist
+const watchlist =forms[1]
+watchlist.addEventListener("submit", function(event){generateSession(event)})
 
 //Gets films from users list1
-const submitChoices = document.querySelectorAll("form")[3]
+const submitChoices = forms[2]
 submitChoices.addEventListener("submit", function(event){getFilms(event,usersList)})
 
 //Authenticates the users tmdb account
 function userAuth(event) {
     event.preventDefault();
-    userForm.classList.toggle("hide")
-    userSession.classList.toggle("hide")
+    formSections[0].classList.toggle("hide")
+    formSections[1].classList.toggle("hide")
     //Get request token and open autehntication window for user
     fetch(`${baseURL}authentication/token/new?api_key=${APIKEY}`)
         .then(response => response.json())
@@ -64,8 +61,8 @@ function userAuth(event) {
 //Generates a session id
 function generateSession(event) {
     event.preventDefault();
-    userSession.classList.toggle("hide")
-    watchlist.classList.toggle("hide")
+    formSections[1].classList.toggle("hide")
+    formSections[2].classList.toggle("hide")
     
     const data = {"request_token": request[0]}
     //Creates sesssion id
@@ -81,19 +78,16 @@ function generateSession(event) {
         return response.session_id})
     .then(response => {
         sessionID.push(response)
+        getWatchlist(response)
         return sessionID
     })
 
 }
 
 //Gets users watchlist
-function getWatchlist(event) {
-    event.preventDefault();
-    watchlist.classList.toggle("hide")
-    submitChoices.classList.toggle("hide")
-
+function getWatchlist(id) {
     //Gets a users account id
-    fetch(`${baseURL}account?api_key=${APIKEY}&session_id=${sessionID[0]}`)
+    fetch(`${baseURL}account?api_key=${APIKEY}&session_id=${id}`)
     .then(response => response.json())
     .then(response => response.id)
     .then(response => {
@@ -102,7 +96,7 @@ function getWatchlist(event) {
     })
 
     //Gets users created watchlist
-    fetch(`${baseURL}account/${accountID[0]}/watchlist/movies?api_key=${APIKEY}&language=en-US&session_id=${sessionID[0]}&sort_by=created_at.asc`)
+    fetch(`${baseURL}account/${accountID[0]}/watchlist/movies?api_key=${APIKEY}&language=en-US&session_id=${id}&sort_by=created_at.asc`)
     .then(response => response.json())
     .then(response => response.results)
     .then(response => {
@@ -324,7 +318,7 @@ function filmOutput(films) {
 
         //Create div for posterimage to be added to
         const posterBox = document.createElement("article")
-        posterBox.className="poster-box"
+        posterBox.classList.add("poster-box", "grid", "center")
         //Add the film poster to image tag
         const poster = document.createElement("img")
         poster.src = baseImageURL + "w500" + film.poster_path

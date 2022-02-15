@@ -14,51 +14,50 @@
     </header>
     <main>
         <section class="intro center">
-            <header><h2>Intro</h2></header>
-            <p>To start you need a tmdb account and a watchlist created on their platform</p>
+            <header><h2>First Steps</h2></header>
+            <form class="auth">
+                <label for="approve">To start off make sure you have a <a href="https://www.themoviedb.org/signup">TMDB</a> account, with a relevant watchlist. Then click authorise to allow the upload of your list</label>
+                <button type="submit" class="button" id="approve">Authorise</button>
+            </form>
         </section>
-        
-        <form class="auth">
-            <label for="approve">Click to approve your tmdb account</label>
-            <button type="submit" class="button" id="approve">approve</button>
-        </form>
 
-        <form class="session hide">
-            <label for="session">Click to create a user session</label>
-            <button type="submit" class="button" id="session">Watchlist</button>
-        </form>
+        <section class="intro center hide">
+            <header><h2>Watchlist</h2></header>           
+            <form class="session">
+                <label for="session">Now authorised, you can now upload your TMDB watchlist</label>
+                <button type="submit" class="button" id="session">Upload</button>
+            </form>
+        </section>
 
-        <form class="list hide">
-            <label for="getfilms">Click to upload your watchlist</label>
-            <button type="submit" class="button">Use my list</button>
-        </form>
+        <section class="intro center hide">
+            <header><h2>Submit Choices</h2></header>
+            <p>Now your watchlist is uploaded, make decisions based on the form below to get random films from your watchlist.</p>
+            <form class="picker">
 
-        <form class="picker hide">
+                <!-- <label for="runtime">Maximum runtime in minutes (0 for any length)</label>
+                <input id="runtime" type="number" name="runtime" /> -->
 
-            <label for="runtime">Maximum runtime in minutes (0 for any length)</label>
-            <input id="runtime" type="number" name="runtime" />
+                <label for="genre">Select Genre</label>
+                <select id="genre" name="genre_ids">
+                    <option value="any-genre">Any Genre</option>
+                </select>
 
-            <label for="genre">Select Genre</label>
-            <select id="genre" name="genre_ids">
-                <option value="any-genre">Any Genre</option>
-            </select>
+                <label for="language">Select Language</label>
+                <select id="language" name="original_language">
+                    <option value="any-lang">Any Language</option>
+                </select>
 
-            <label for="language">Select Language</label>
-            <select id="language" name="original_language">
-                <option value="any-lang">Any Language</option>
-            </select>
+                <label for="decade">Select Decade</label>
+                <select id="decade" name="release_date">
+                    <option value="any-decade">Any Decade</option>
+                </select>
 
-            <label for="decade">Select Decade</label>
-            <select id="decade" name="release_date">
-                <option value="any-decade">Any Decade</option>
-            </select>
+                <label for="returned">Enter the number of films to be returned</label>
+                <input id="returned" type="number" name="number_returned" value="1" min="1"/>
 
-            <label for="returned">Enter the number of films to be returned</label>
-            <input id="returned" type="number" name="number_returned" value="1" min="1"/>
-
-            <button type="submit" class="button" id="pick-btn">Submit Choices</button>
-        </form>
-
+                <button type="submit" class="button" id="pick-btn">Submit Choices</button>
+            </form>
+        </section>
         <section class="results center grid width-lg"></section>
 
         <div class="overlay"></div>
