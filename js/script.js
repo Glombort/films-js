@@ -25,7 +25,7 @@ let accountID;
 let usersList;
 
 
-const results = document.querySelector(".results");
+const poster = document.querySelector(".results");
 const overlay = document.querySelector("overlay");
 const formSections = document.querySelectorAll(".intro")
 const forms = document.querySelectorAll("form")
@@ -203,7 +203,7 @@ function getFilms(event) {
     event.preventDefault();
     const films = usersList
     //Reset output areas
-    results.innerHTML=""
+    poster.innerHTML=""
     overlay.innerHTML=""
     
     //Sets users choice of film
@@ -261,7 +261,7 @@ Output Area
 */
 
 //Output to the correct part of index.html for the title, overview and image
-function filmOutput(films) {
+async function filmOutput(films) {
     //Takes available films, shuffles and picks first 5
     films = films.sort(() => Math.random() - 0.5)
     let numberToReturn = parseInt(submitChoices.number_returned.value) - 1
@@ -269,12 +269,17 @@ function filmOutput(films) {
         numberToReturn = films.length -1
     }
     //Pick films
-    for(let i=0; i<=numberToReturn; i++) {pickFilm(films[i])}
-    overlayEvents()
-    
+    for(let i=0; i<=numberToReturn; i++) {
+        let film = films[i]
+        const details = await filmOverlay(film)
+        poster.append(pickPoster(film))
+        overlay.append(details)
+    }
+    overlayEvents() 
 }
 
-function pickFilm(film) {
+// Poster image
+function pickPoster(film) {
     //Create div for posterimage to be added to
     const posterBox = document.createElement("article")
     posterBox.classList.add("poster-box", "grid", "center")
@@ -287,50 +292,108 @@ function pickFilm(film) {
     posterBox.append(poster);
     posterBox.tabIndex = 0
     //Append to the rest of the posters on the page
-    results.append(posterBox)
+    return posterBox
+}
 
+//Overlay for films
+async function filmOverlay(film) {
     //Setup overlay
     const filmOverlay = document.createElement("div");
-    filmOverlay.classList.add("film-overlay", "center", "width-lg");
+    filmOverlay.classList.add("film-overlay", "center", "width-lg", "grid");
+
+    const leftFilm = leftContent(film)
+    const rightFilm = await rightContent(film)
     //Add the x to close the overlay
     const span = document.createElement("span");
     span.className = "close"
     span.innerHTML = `&times;`
-    //Add the box for left side of the overlay
+    
+    //Appending to the div for the specific overlay
+    filmOverlay.append(span, leftFilm, rightFilm);
+    return filmOverlay
+}
+
+//Title and synopsis
+function leftContent(film) {
     const leftFilm  = document.createElement("section")
     leftFilm.className = "left-film"
-    //Add the box for the right side of the overlay
-    const rightFilm = document.createElement("section")
-    rightFilm.className = "right-film"
-    //Add the title of the film to the left overlay
+
+    //Film Title
     const heading = document.createElement("h2");
     heading.textContent = film.title;
     heading.className = "film-name"
-    //Add the overview of the film to the left overlay
+
+    //Film Overview
     const overview = document.createElement("p")
     overview.textContent = film.overview
     overview.className = "film-overview"
-/*
-To be added again to right side when found out how to add fetch these from tmdb again
-*/
-    // const director = document.createElement("h3")
-    // director.textContent = film.director
-    
-    // const genre = document.createElement("h3")
-    // genre.textContent = film.genre
 
-    // const year = document.createElement("h3")
-    // year.textContent = film.year
-    
-    //Appending the items to the left and right side of the overlay
     leftFilm.append(heading,overview);
-    //rightFilm.append(director, genre, year);
-    //Appending to the div for the specific overlay
-    filmOverlay.append(span, leftFilm, rightFilm);
-    //Appending to the div for all overlays
-    overlay.append(filmOverlay);
+    return leftFilm
 }
 
+//Details
+async function rightContent(film) {
+
+
+    const rightFilm = document.createElement("section");
+    rightFilm.className = "right-film";
+    
+    const director = document.createElement("h3")
+    const directedBy = await pickedDirector(film)
+    director.textContent = `Directed By - ${directedBy}`
+
+    const genre = document.createElement("h3");
+    const genres = await pickedGenre(film.genre_ids);
+    console.log(genres)
+    genre.textContent = `Genre - ${genres.join(", ")}`
+
+    const year = document.createElement("h3");
+    year.textContent = `Released - ${pickedYear(film.release_date)}`;
+
+    const streaming = document.createElement("a");
+    const streamingURL = await services(film);
+    streaming.textContent = `Where it's streaming`;
+    streaming.href = streamingURL
+    streaming.target = "_blank"
+    streaming.rel = "noopener noreferrer"
+
+    
+    rightFilm.append(director, genre, year, streaming);
+    return rightFilm
+    //})
+}
+
+async function pickedDirector(film) {
+    const credits = await fetchFunc(`${baseURL}movie/${film.id}/credits?api_key=${APIKEY}&language=en-us`)
+    
+    const directors = credits["crew"].filter((member) => {
+        if (member["job"] === "Director") {
+            return true
+        }
+        return false
+    })
+    return directors[0]["name"]
+    
+}
+
+async function pickedGenre(genres) {
+    const genre = await genreObj;
+    genres.forEach((e,index) => {
+        genres[index] = genre[e]
+    })
+    return genres
+}
+
+function pickedYear(date) {
+    return date.substring(0,4)
+}
+
+async function services(film) {
+    const providers = await fetchFunc(`${baseURL}movie/${film.id}/watch/providers?api_key=${APIKEY}`);
+    const ukProvider = providers["results"]["GB"]["link"]
+    return ukProvider
+}
 
 function overlayEvents() {
 
