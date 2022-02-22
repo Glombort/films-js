@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', configTMDB);
 
 //Setting variables for getting items
 let request;
-let sessionID;
+let sessionID = localStorage.getItem('sessionID')
 let accountID;
 let usersList;
 
@@ -33,7 +33,11 @@ const userForm = forms[0]
 const uploadList =forms[1]
 const submitChoices = forms[2]
 
-
+if (sessionID !== null) {
+    sessionID = localStorage.getItem("sessionID");
+    formSections[0].classList.add("hide");
+    formSections[1].classList.remove("hide")
+}
 //Get 3rd party approval through TMDB
 userForm.addEventListener("submit", function(event){userAuth(event)})
 //Create Session ID then gets users watchlist
@@ -61,10 +65,14 @@ function upload(event) {
     event.preventDefault();
 
     formSections[1].classList.add("hide")
-    
-    generateSession()
-    .then(response => getWatchlist(response))
-    .then(formSections[2].classList.remove("hide"))
+    if (sessionID === null) {
+        generateSession()
+        .then(response => getWatchlist(response))
+        .then(formSections[2].classList.remove("hide"))
+    } else {
+        getWatchlist(sessionID)
+        .then(formSections[2].classList.remove("hide"))
+    }
 }
 
 //Generates a session id
@@ -81,6 +89,7 @@ async function generateSession() {
     });
     const sessionJSON = await sessionPromise.json();
     sessionID = sessionJSON.session_id;
+    localStorage.setItem("sessionID", sessionID);
     return sessionID;
 
 }
@@ -101,9 +110,11 @@ async function getWatchlist(session) {
 async function fetchFunc(url) {
     try {
         const response = await fetch(url);
-        return await response.json();
-    } catch (data) {
-        return console.error(data);
+        if (!response.ok) throw new Error(response.status);
+        return response.json();
+    } catch (error) {
+        console.log(error);
+        poster.innerHTML = `Oops having trouble here ${error}`
     }
 }
 
@@ -132,8 +143,8 @@ function selectors(filmList) {
     const decadeDropdown = document.querySelector("#decade");
     
     //Adding availables to dropdowns
-    genreNames.then(response => addDropdown(response, genreDropdown))
-    languageNames.then(response => addDropdown(response, langDropdown))
+    addDropdown(genreNames, genreDropdown)
+    addDropdown(languageNames, langDropdown)
     //Decade Dropdown
     for (let decade in decades) {
         const option = document.createElement("option")
@@ -142,15 +153,6 @@ function selectors(filmList) {
         decadeDropdown.append(option)
     }
 }
-
-//Genre id to genre name object
-const genreObj = fetchFunc(`${baseURL}genre/movie/list?api_key=${APIKEY}&language=en-US`)
-    .then(response => response['genres'])
-    .then(response => objectCodes(response, 'id', 'name'))
-
-//Creating the langugage id to english name object
-const languageObj = fetchFunc(`${baseURL}configuration/languages?api_key=${APIKEY}`)
-    .then(response => objectCodes(response, 'iso_639_1', 'english_name'))
 
 //Decade Functions
 function decadeOptions(filmYear, available) {
@@ -179,13 +181,19 @@ function options(current, available) {
     return available
 }
 
-async function idToName(objPromise, ids) {
+function idToName(obj, ids) {
     const names = [];
-    const obj = await objPromise
+    console.log(obj)
     ids.forEach((id) => {
         names.push([obj[id],id])
     });
     return names.sort()
+}
+
+function nameToId(names) {
+    names.forEach((name, index) => {
+        names[index] = Object.keys(genreObj).find(key => genreObj[key] === name)
+    })
 }
 
 function addDropdown(idNames, dropdown) {
@@ -344,9 +352,9 @@ async function rightContent(film) {
     director.textContent = `Directed By - ${directedBy}`
 
     const genre = document.createElement("h3");
-    const genres = await pickedGenre(film.genre_ids);
-    console.log(genres)
+    const genres = pickedGenre(film.genre_ids);
     genre.textContent = `Genre - ${genres.join(", ")}`
+    nameToId(film.genre_ids)
 
     const year = document.createElement("h3");
     year.textContent = `Released - ${pickedYear(film.release_date)}`;
@@ -377,12 +385,12 @@ async function pickedDirector(film) {
     
 }
 
-async function pickedGenre(genres) {
-    const genre = await genreObj;
+function pickedGenre(genres) {
+    const names = genres
     genres.forEach((e,index) => {
-        genres[index] = genre[e]
+        names[index] = genreObj[e]
     })
-    return genres
+    return names
 }
 
 function pickedYear(date) {
@@ -390,9 +398,15 @@ function pickedYear(date) {
 }
 
 async function services(film) {
-    const providers = await fetchFunc(`${baseURL}movie/${film.id}/watch/providers?api_key=${APIKEY}`);
-    const ukProvider = providers["results"]["GB"]["link"]
-    return ukProvider
+    
+    try {
+        const providers = await fetchFunc(`${baseURL}movie/${film.id}/watch/providers?api_key=${APIKEY}`);
+        const ukProvider = providers["results"]["GB"]["link"]
+        return ukProvider
+    } catch (error) {
+        console.log(error);
+        return "" //Change to something different?
+    }
 }
 
 function overlayEvents() {
