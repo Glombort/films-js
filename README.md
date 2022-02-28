@@ -1,5 +1,5 @@
-# [films-v2](https://glombort.github.io/films-js/)
-JS version of [films-v1](https://github.com/Glombort/films-py) for easy to use UI
+# [films-JS](https://glombort.github.io/films-js/)
+JS version of [films-py](https://github.com/Glombort/films-py) for easy to use UI
 
 ## What is the site:
 
